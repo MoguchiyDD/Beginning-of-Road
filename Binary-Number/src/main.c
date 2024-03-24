@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write The BINARY NUMBER from 0
 Result: Complete The BINARY NUMBER from 0
 
-Past Modification: Adding The «ERRORS» BLOCK
-Last Modification: Adding The «COMMANDS» BLOCK
-Modification Date: 2024.03.24, 12:28 AM
+Past Modification: Adding The «COMMANDS» BLOCK
+Last Modification: Editing The «COMMANDS» and «DB» BLOCK
+Modification Date: 2024.03.24, 02:05 PM
 
 Create Date: 2024.03.23, 09:26 PM
 */
@@ -17,24 +17,31 @@ Create Date: 2024.03.23, 09:26 PM
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "binary/binary.h"
 #include "errors.h"
 
 #ifndef MAIN
   #define MAIN
-  #define ARGUMENTS 2
+  #define ARGUMENTS 3
   #define COMMANDS 3
 
-  // for STRING SWITCH
   enum cmd_args{DB, OB, XB};
+
+  /**
+   * @copyright Copyright (c) 2024 MoguchiyDD
+   * @brief for STRING SWITCH | (Example, INPUT: ob; OUTPUT: 1)
+   * @param *cmd Command from Terminal
+   * @returns Number Command
+   */
   int int_cmd_args(char *cmd) {
     int cur = 0;
     static struct dict {
       const char key[COMMANDS];
       enum cmd_args cmd;
     } cmds[COMMANDS] = {
-      {"-db", DB},
-      {"-ob", OB},
-      {"-xb", XB}
+      {"db", DB},
+      {"ob", OB},
+      {"xb", XB}
     };
 
     struct dict *d = cmds;
@@ -51,7 +58,7 @@ Create Date: 2024.03.23, 09:26 PM
 #endif
 
 int main(int argc, char *argv[]) {
-  if (argc < ARGUMENTS) {  // CHECK: Number of Arguments
+  if ((argc < ARGUMENTS) || (argc > ARGUMENTS)) {  // CHECK: Number of Arguments
     if (argc == 1) {
       printf("%s: found %d argument, but needed %d arguments.\n", S_COUNT_ARGUMENTS, argc, ARGUMENTS);
     } else {
@@ -67,7 +74,9 @@ int main(int argc, char *argv[]) {
   strcpy(cmd, argv[1]);
   switch(int_cmd_args(cmd)) {
     case DB:  // 10->2
-      printf("DB\n");
+      char *decimal = db(argv[2]);
+      printf("Input : %s\nOutput: %s\n", argv[2], decimal);
+      free(decimal);
       break;
     case OB:  // 8->2
       printf("OB\n");

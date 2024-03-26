@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write The BINARY NUMBER from 0
 Result: Complete The BINARY NUMBER from 0
 
-Past Modification: Adding The «COMMANDS» BLOCK
-Last Modification: Editing The «COMMANDS» and «DB» BLOCK
-Modification Date: 2024.03.24, 02:05 PM
+Past Modification: Editing The «HEXDECIMAL» BLOCK
+Last Modification: Editing The «ENUM» BLOCK
+Modification Date: 2024.03.26, 05:49 PM
 
 Create Date: 2024.03.23, 09:26 PM
 */
@@ -25,7 +25,7 @@ Create Date: 2024.03.23, 09:26 PM
   #define ARGUMENTS 3
   #define COMMANDS 3
 
-  enum cmd_args{DB, OB, XB};
+  enum cmd_args{DB, OB, HB};
 
   /**
    * @copyright Copyright (c) 2024 MoguchiyDD
@@ -36,12 +36,12 @@ Create Date: 2024.03.23, 09:26 PM
   int int_cmd_args(char *cmd) {
     int cur = 0;
     static struct dict {
-      const char key[COMMANDS];
+      const char key[4];
       enum cmd_args cmd;
     } cmds[COMMANDS] = {
-      {"db", DB},
-      {"ob", OB},
-      {"xb", XB}
+      {"-db\0", DB},
+      {"-ob\0", OB},
+      {"-hb\0", HB}
     };
 
     struct dict *d = cmds;
@@ -81,8 +81,8 @@ int main(int argc, char *argv[]) {
     case OB:  // 8->2
       printf("OB\n");
       break;
-    case XB:  // 16->2
-      printf("XB\n");
+    case HB:  // 16->2
+      printf("HB\n");
       break;
     default:
       printf("%s: command is missing.\n", S_COMMAND_IS_MISSING);

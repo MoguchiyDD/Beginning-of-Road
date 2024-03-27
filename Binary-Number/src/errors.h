@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write your own ERRORS for The Program
 Result: Complete your own ERRORS for The Program
 
-Past Modification: Adding The «MEMORY_FULL» BLOCK ERRORS
-Last Modification: Adding The «DECIMAL», «OCTAL» and «HEXDECIMAL» BLOCK ERRORS
-Modification Date: 2024.03.26, 05:41 PM
+Past Modification: Adding The «DECIMAL», «OCTAL» and «HEXDECIMAL» BLOCK ERRORS
+Last Modification: Adding The «BINARY_SEARCH» BLOCK ERRORS
+Modification Date: 2024.03.27, 12:39 PM
 
 Create Date: 2024.03.23, 10:52 PM
 */
@@ -39,4 +39,8 @@ Create Date: 2024.03.23, 10:52 PM
   // Hexdecimal
   #define D_HEXDECIMAL 6
   #define S_HEXDECIMAL "HexdecimalError"
+
+  // Binary Search
+  #define D_BINARY_SEARCH 7
+  #define S_BINARY_SEARCH "BinarySearchError"
 #endif

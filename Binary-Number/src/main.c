@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write The BINARY NUMBER from 0
 Result: Complete The BINARY NUMBER from 0
 
-Past Modification: Editing The «HEXDECIMAL» BLOCK
-Last Modification: Editing The «ENUM» BLOCK
-Modification Date: 2024.03.26, 05:49 PM
+Past Modification: Editing The «ENUM» BLOCK
+Last Modification: Editing The «OCTAL» and «HEXDECIMAL» BLOCKS
+Modification Date: 2024.03.27, 02:59 PM
 
 Create Date: 2024.03.23, 09:26 PM
 */
@@ -17,6 +17,7 @@ Create Date: 2024.03.23, 09:26 PM
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "binary/binary.h"
 #include "errors.h"
 
@@ -72,17 +73,35 @@ int main(int argc, char *argv[]) {
   // COMMANDS
   char *cmd = malloc(strlen(argv[1] + 1));
   strcpy(cmd, argv[1]);
+
+  // NUMBER
+  int a2 = 0, n = 0;
+  char number[strlen(argv[2])];
+  while (argv[2][a2]) {
+    if (isalpha(argv[2][a2]) != 0) {
+      number[n++] = toupper(argv[2][a2]);
+    } else {
+      number[n++] = argv[2][a2];
+    }
+    a2++;
+  }
+  number[strlen(argv[2])] = '\0';
+
   switch(int_cmd_args(cmd)) {
     case DB:  // 10->2
-      char *decimal = db(argv[2]);
-      printf("Input : %s\nOutput: %s\n", argv[2], decimal);
+      char *decimal = db(number);
+      printf("Input : %s\nOutput: %s\n", number, decimal);
       free(decimal);
       break;
     case OB:  // 8->2
-      printf("OB\n");
+      char *octal = ob(number);
+      printf("Input : %s\nOutput: %s\n", number, octal);
+      free(octal);
       break;
     case HB:  // 16->2
-      printf("HB\n");
+      char *hexdecimal = hb(number);
+      printf("Input : %s\nOutput: %s\n", number, hexdecimal);
+      free(hexdecimal);
       break;
     default:
       printf("%s: command is missing.\n", S_COMMAND_IS_MISSING);

@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write your own BINARY NUMBER for The Program
 Result: Complete your own BINARY NUMBER for The Program
 
-Past Modification: Adding The «REVERSE» and «10->2» BLOCKS
-Last Modification: Adding a VALIDATION for Numbers
-Modification Date: 2024.03.26, 05:48 PM
+Past Modification: Adding a VALIDATION for Numbers
+Last Modification: Adding The «8->2» and «16->2» BLOCKS
+Modification Date: 2024.03.27, 02:59 PM
 
 Create Date: 2024.03.24, 01:56 PM
 */
@@ -30,10 +30,14 @@ Create Date: 2024.03.24, 01:56 PM
     const char key[2];
     const int value;
   } doh;
+  typedef struct oh_template {
+    const char key[2];
+    const char value[5];
+  } template;
 #endif
 
 
-// ----------- GENERAL ------------
+// ------------- GENERAL --------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -53,7 +57,7 @@ static void memory_full_error() {
  * @param size Memory SIZE
  */
 static int memory_realloc(char *memory, int size) {
-  size += sizeof(int);
+  size += sizeof(int) + 1;
 
   char *new_memory = realloc(memory, size);
   if (new_memory == NULL) {
@@ -65,10 +69,35 @@ static int memory_realloc(char *memory, int size) {
   return size;
 }
 
-// --------------------------------
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @brief Binary Search for CHARACTERS
+ * @param target Number to Find
+ * @param *temp Template with CHARACTERS
+ * @param max_temp Length «*temp»
+ * @returns Number (Found) || -1 (Not Found)
+ */
+static int binary_search(char target, template *temp, int max_temp) {
+  int left = 0, right = max_temp - 1, mid;
+  while (left <= right) {
+    mid = (left + right) / 2;
+
+    if (temp[mid].key[0] == target) {
+      return mid;
+    } else if (temp[mid].key[0] > target) {
+      right = mid - 1;
+    } else if (temp[mid].key[0] < target) {
+      left = left + 1;
+    }
+  }
+
+  return -1;
+}
+
+// ------------------------------------
 
 
-// ----------- STATICS ------------
+// ------------- STATICS --------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -102,6 +131,7 @@ static void reverse_string(char string[]) {
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception DecimalError, OctalError || HexdecimalError
  * @brief Checks 1 Number and Writes it to MEMORY for Further Conversion to BINARY (Example, "9A" -> "910") | `Used for The «string_to_integer» Function`
  * @param *type For ERROR MESSAGE «decimal», «octal» or «hexdecimal»
  * @param *number Number to be Checked for Suitability for Conversion to BINARY
@@ -127,7 +157,7 @@ static void inside_func_str_to_int(char *type, char *number, char *new_number, d
 
     // Find Number from Decimal
     for (; bin->key != NULL && ((bin->key[0] == number[n]) == 0); ++bin, cur++) {
-      if (cur == MAX_DECIMAL) {
+      if (cur == max_bin) {
         is_error += 1;
         break;
       }
@@ -158,7 +188,7 @@ static void inside_func_str_to_int(char *type, char *number, char *new_number, d
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError
+ * @exception MemoryFullError, DecimalError, OctalError || HexdecimalError
  * @brief String to Integer | (Example, INPUT: "9A"; OUTPUT: 910)
  * @param cmd Command is «d» (decimal), «o» (octal) or «h» (hexdecimal)
  * @param *number Number to be Checked for Suitability for Conversion to BINARY
@@ -181,8 +211,8 @@ static int string_to_integer(char cmd, char *number) {
     );
   } else if (cmd == 'o') {  // Octal
     doh octal[MAX_OCTAL] = {
-      {'0', 0}, {'1', 1}, {'2', 2}, {'3', 3},
-      {'4', 4}, {'5', 5}, {'6', 6}, {'7', 7}
+      {"0\0", 0}, {"1\0", 1}, {"2\0", 2}, {"3\0", 3},
+      {"4\0", 4}, {"5\0", 5}, {"6\0", 6}, {"7\0", 7}
     };
     inside_func_str_to_int(
       "octal", number, new_number,
@@ -190,10 +220,10 @@ static int string_to_integer(char cmd, char *number) {
     );
   } else if (cmd == 'h') {  // Hexdecimal
     doh hexdecimal[MAX_HEXDECIMAL] = {
-      {'0', 0}, {'1', 1}, {'2', 2}, {'3', 3},
-      {'4', 4}, {'5', 5}, {'6', 6}, {'7', 7},
-      {'8', 8}, {'9', 9}, {'A', 10}, {'B', 11},
-      {'C', 12}, {'D', 13}, {'E', 14}, {'F', 15}
+      {"0\0", 0}, {"1\0", 1}, {"2\0", 2}, {"3\0", 3},
+      {"4\0", 4}, {"5\0", 5}, {"6\0", 6}, {"7\0", 7},
+      {"8\0", 8}, {"9\0", 9}, {"A\0", 10}, {"B\0", 11},
+      {"C\0", 12}, {"D\0", 13}, {"E\0", 14}, {"F\0", 15}
     };
     inside_func_str_to_int(
       "hexdecimal", number, new_number,
@@ -208,14 +238,64 @@ static int string_to_integer(char cmd, char *number) {
   return result;
 }
 
-// --------------------------------
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError, DecimalError, OctalError || HexdecimalError
+ * @brief Fills the variable «new_number» with 1 and 0 according to a pre-made template | (Example, INPUT: 9A; OUTPUT: 10011010)
+ * @param *temp Template with CHARACTERS
+ * @param max_temp Length «*temp»
+ * @param *number Number to be Checked for Suitability for Conversion to BINARY
+ * @param *new_number MEMORY where The Converted Number is Written After VERIFICATION
+ * @param size Amount of Memory
+ */
+static void filling_in_data_using_a_template(template *temp, int max_temp, char *number, char *new_number, int size) {
+  int len_number = strlen(number),  // Length «number»
+      index_new_number = 0,  // Index for New Number
+      size_minus_1 = size - 1,  // for MEMORY EXPANSION
+      find = -1,  // Found Number
+      n_not_1 = 0,  // 
+      n = 0,  // for LOOP #1 (for Number)
+      t = 0;  // for LOOP #2 (for Template)
+  char *oh;
+
+  template *copy_temp = temp;
+  for (n; n < len_number; n++) {
+    if (n == size_minus_1) {  // Memory Expansion
+      size = memory_realloc(new_number, size);
+      size_minus_1 = size - 1;
+    }
+
+    // Find 1 Number
+    find = binary_search(number[n], temp, max_temp);
+    if (find == -1) {
+      printf("%s: Returns -1 from a Hard-Coded Pattern when Searching for 1 Number\n", S_BINARY_SEARCH);
+      exit(D_BINARY_SEARCH);
+    }
+    temp = copy_temp;
+
+    for (t = 0; t < strlen(temp[find].value); t++) {
+      if ((n == 0) && (temp[find].value[t] == '1')) {
+        ++n_not_1;
+      }
+      if ((n_not_1 >= 1) && temp[find].value[t] != '\0') {
+        if (strlen(new_number) == size_minus_1) {  // Memory Expansion
+          size = memory_realloc(new_number, size);
+          size_minus_1 = size - 1;
+        }
+        new_number[index_new_number++] = temp[find].value[t];
+      }
+    }
+  }
+}
+
+// ------------------------------------
 
 
-// ------------ DECIMAL -----------
+// ------------- DECIMAL --------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError | DecimalError
+ * @exception MemoryFullError || DecimalError
  * @brief Decimal to Binary | (Example, INPUT: 10; OUTPUT: 1010)
  * @param *number Decimal Number
  * @returns Binary Number
@@ -258,4 +338,76 @@ char* db(char *number) {
   return result;
 }
 
-// --------------------------------
+// ------------------------------------
+
+
+// -------------- OCTAL ---------------
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError || OctalError
+ * @brief Octal to Binary | (Example, INPUT: 12; OUTPUT: 1010)
+ * @param *number Octal Number
+ * @returns Binary Number
+ */
+char* ob(char *number) {
+  string_to_integer('o', number);
+
+  int size = 4;  // 1 byte (000 - 111) + '\0'
+  char *o = calloc(size, sizeof(char));
+  if (o == NULL) {
+    memory_full_error();
+  }
+
+  char *result; 
+  template temp[8] = {
+    {"0\0", "000\0"}, {"1\0", "001\0"}, {"2\0", "010\0"}, {"3\0", "011\0"},
+    {"4\0", "100\0"}, {"5\0", "101\0"}, {"6\0", "110\0"}, {"7\0", "111\0"}
+  };
+  filling_in_data_using_a_template(temp, MAX_OCTAL, number, o, size);
+
+  o[strlen(o)] = '\0';
+  result = o;
+  // free(o);
+
+  return result;
+}
+
+// ------------------------------------
+
+
+// ------------ HEXDECIMAL ------------
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError || HexdecimalError
+ * @brief Hexdecimal to Binary | (Example, INPUT: A; OUTPUT: 1010)
+ * @param *number Hexdecimal Number
+ * @returns Binary Number
+ */
+char* hb(char *number) {
+  string_to_integer('h', number);
+
+  int size = 5;  // 1 byte (0000 - 1111) + '\0'
+  char *h = calloc(size, sizeof(char));
+  if (h == NULL) {
+    memory_full_error();
+  }
+
+  char *result;
+  template temp[MAX_HEXDECIMAL] = {
+    {"0\0", "0000\0"}, {"1\0", "0001\0"}, {"2\0", "0010\0"}, {"3\0", "0011\0"},
+    {"4\0", "0100\0"}, {"5\0", "0101\0"}, {"6\0", "0110\0"}, {"7\0", "0111\0"},
+    {"8\0", "1000\0"}, {"9\0", "1001\0"}, {"A\0", "1010\0"}, {"B\0", "1011\0"},
+    {"C\0", "1100\0"}, {"D\0", "1101\0"}, {"E\0", "1110\0"}, {"F\0", "1111\0"}
+  };
+  filling_in_data_using_a_template(temp, MAX_HEXDECIMAL, number, h, size);
+
+  h[strlen(h)] = '\0';
+  result = h;
+  // free(h);
+
+  return result;
+}
+
+// ------------------------------------

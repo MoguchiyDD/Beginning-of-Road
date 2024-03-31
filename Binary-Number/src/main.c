@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write The BINARY NUMBER from 0
 Result: Complete The BINARY NUMBER from 0
 
-Past Modification: Editing The «2->8», «2->10» and «2->16» BLOCKS
-Last Modification: Moving The «int_cmd_args» to «commands» FOLDER
-Modification Date: 2024.03.29, 06:17 PM
+Past Modification: Moving The «int_cmd_args» to «commands» FOLDER
+Last Modification: Adding The «8->10», «10->8», «16->10», «10->16», «8->16» and «16->8» BLOCKS
+Modification Date: 2024.03.31, 11:24 PM
 
 Create Date: 2024.03.23, 09:26 PM
 */
@@ -57,34 +57,64 @@ int main(int argc, char *argv[]) {
 
   switch(int_cmd_args(cmd)) {
     case BO:  // 2->8
-      char *binary_octal = bo(cmd, number);
+      char *binary_octal = _bo(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, binary_octal);
       free(binary_octal);
       break;
     case OB:  // 8->2
-      char *octal_binary = ob(cmd, number);
+      char *octal_binary = _ob(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, octal_binary);
       free(octal_binary);
       break;
     case BD:  // 2->10
-      char *binary_decimal = bd(cmd, number);
+      char *binary_decimal = _bd(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, binary_decimal);
       free(binary_decimal);
       break;
     case DB:  // 10->2
-      char *decimal_binary = db(cmd, number);
+      char *decimal_binary = _db(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, decimal_binary);
       free(decimal_binary);
       break;
     case BH:  // 2->16
-      char *binary_hexdecimal = bh(cmd, number);
+      char *binary_hexdecimal = _bh(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, binary_hexdecimal);
       free(binary_hexdecimal);
       break;
     case HB:  // 16->2
-      char *hexdecimal_binary = hb(cmd, number);
+      char *hexdecimal_binary = _hb(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, hexdecimal_binary);
       free(hexdecimal_binary);
+      break;
+    case OD:  // 8->10
+      char *octal_decimal = _od(cmd, number);
+      printf("Input : %s\nOutput: %s\n", number, octal_decimal);
+      free(octal_decimal);
+      break;
+    case DO:  // 10->8
+      char *decimal_octal = _do(cmd, number);
+      printf("Input : %s\nOutput: %s\n", number, decimal_octal);
+      // free(decimal_octal);
+      break;
+    case HD:  // 16->10
+      char *hexdecimal_decimal = _hd(cmd, number);
+      printf("Input : %s\nOutput: %s\n", number, hexdecimal_decimal);
+      free(hexdecimal_decimal);
+      break;
+    case DH:  // 10->16
+      char *decimal_hexdecimal = _dh(cmd, number);
+      printf("Input : %s\nOutput: %s\n", number, decimal_hexdecimal);
+      free(decimal_hexdecimal);
+      break;
+    case OH:  // 8->16
+      char *octal_hexdecimal = _oh(cmd, number);
+      printf("Input : %s\nOutput: %s\n", number, octal_hexdecimal);
+      free(octal_hexdecimal);
+      break;
+    case HO:  // 16->8
+      char *hexdecimal_octal = _ho(cmd, number);
+      printf("Input : %s\nOutput: %s\n", number, hexdecimal_octal);
+      free(hexdecimal_octal);
       break;
     default:
       printf("%s: command is missing.\n", S_COMMAND_IS_MISSING);

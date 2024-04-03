@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write The BINARY NUMBER from 0
 Result: Complete The BINARY NUMBER from 0
 
-Past Modification: Moving The «int_cmd_args» to «commands» FOLDER
-Last Modification: Adding The «8->10», «10->8», «16->10», «10->16», «8->16» and «16->8» BLOCKS
-Modification Date: 2024.03.31, 11:24 PM
+Past Modification: Adding The «8->10», «10->8», «16->10», «10->16», «8->16» and «16->8» BLOCKS
+Last Modification: Adding The «stdint.h» LIBRARY
+Modification Date: 2024.04.03, 08:40 PM
 
 Create Date: 2024.03.23, 09:26 PM
 */
@@ -15,6 +15,7 @@ Create Date: 2024.03.23, 09:26 PM
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <ctype.h>
 #include "commands/commands.h"
@@ -26,7 +27,7 @@ Create Date: 2024.03.23, 09:26 PM
   #define ARGUMENTS 3
 #endif
 
-int main(int argc, char *argv[]) {
+uint_least8_t main(int argc, char *argv[]) {
   if ((argc < ARGUMENTS) || (argc > ARGUMENTS)) {  // CHECK: Number of Arguments
     if (argc == 1) {
       printf("%s: found %d argument, but needed %d arguments.\n", S_COUNT_ARGUMENTS, argc, ARGUMENTS);
@@ -43,7 +44,8 @@ int main(int argc, char *argv[]) {
   strcpy(cmd, argv[1]);
 
   // NUMBER
-  int a2 = 0, n = 0;
+  uint_least8_t a2 = 0,  // for «argv[2]»
+               n = 0;  // for «number»
   char number[strlen(argv[2])];
   while (argv[2][a2]) {
     if (isalpha(argv[2][a2]) != 0) {
@@ -94,7 +96,7 @@ int main(int argc, char *argv[]) {
     case DO:  // 10->8
       char *decimal_octal = _do(cmd, number);
       printf("Input : %s\nOutput: %s\n", number, decimal_octal);
-      // free(decimal_octal);
+      free(decimal_octal);
       break;
     case HD:  // 16->10
       char *hexdecimal_decimal = _hd(cmd, number);

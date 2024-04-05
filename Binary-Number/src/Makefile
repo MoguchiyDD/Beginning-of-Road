@@ -1,17 +1,17 @@
 CC=gcc
-CFLAGS=-c  # -Wall
+CFLAGS=-c
 LDFLAGS=
-SOURCES=commands/commands.c binary/binary.c main.c
+SOURCES=errors/errors.c commands/commands.c arguments/arguments.c binary/binary.c main.c
 OBJECTS=$(SOURCES:.c=.o)
 EXECUTABLE=bodh
 
 all: $(SOURCES) $(EXECUTABLE)
 	
-$(EXECUTABLE): $(OBJECTS) 
+$(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -lm -o $@
 
 .c.o:
 	$(CC) $(CFLAGS) $< -lm -o $@
 
 clean:
-	rm -rf *.o $(EXECUTABLE)
+	rm -rf $(OBJECTS) $(EXECUTABLE)

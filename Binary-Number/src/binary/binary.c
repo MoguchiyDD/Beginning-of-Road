@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write your own BINARY NUMBER for The Program
 Result: Complete your own BINARY NUMBER for The Program
 
-Past Modification: Adding The «8->10», «10->8», «16->10», «10->16», «8->16» and «16->8» BLOCKS
-Last Modification: Adding The «stdint.h» LIBRARY
-Modification Date: 2024.04.05, 06:46 PM
+Past Modification: Adding The «stdint.h» LIBRARY
+Last Modification: Editing The «BINARY, OCTAL, DECIMAL and HEXDECIMAL» ERROR
+Modification Date: 2024.04.05, 10:48 PM
 
 Create Date: 2024.03.24, 01:56 PM
 */
@@ -15,13 +15,12 @@ Create Date: 2024.03.24, 01:56 PM
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 #include <stdint.h>
 #include <string.h>
 #include <math.h>
 #include "binary.h"
 #include "../commands/commands.h"
-#include "../errors.h"
+#include "../errors/errors.h"
 
 #ifndef BINARY_FILE_C
   #define BINARY_FILE_C
@@ -77,17 +76,7 @@ Create Date: 2024.03.24, 01:56 PM
 #endif
 
 
-// ----------------- MEMORY FULL -----------------
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError
- * @brief Error Message about MEMORY FULL
- */
-static void memory_full_error() {
-  printf("%s: While calculating a binary number, a memory overflow occurred. No further action is possible.\n", S_MEMORY_FULL);
-  exit(D_MEMORY_FULL);
-}
+// -------------- MEMORY EXPANSION ---------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -161,16 +150,6 @@ static void reverse_string(char string[]) {
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception BinarySearchError
- * @brief Error Message about BINARY SEARCH
- */
-static void binary_search_error() {
-  printf("%s: Returns -1 from a Hard-Coded Pattern when Searching for 1 Number\n", S_BINARY_SEARCH);
-  exit(D_BINARY_SEARCH);
-}
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
  * @brief Binary Search for CHARACTERS
  * @param target Number to Find (KEY)
  * @param *temp Template with CHARACTERS
@@ -229,16 +208,6 @@ static int_least8_t binary_search_value(char target[5], template *temp, uint_lea
 
 
 // ------------------ INTEGERS -------------------
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MaxIntError
- * @brief Error Message about MAXIMUM INTEGER
- */
-static void maximum_integer_error() {
-  printf("%s: I don't Work After The %dth\n", S_MAXIMUM_INTEGER, INT_LEAST32_MAX);
-  exit(D_MAXIMUM_INTEGER);
-}
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -386,17 +355,15 @@ static void inside_func_checking_number(char *from_type, char *to_type, char *nu
 
     if (is_error >= 1) {  // Have Errors
       if (is_error_bdoh == FALSE) {  // BinaryError, DecimalError, OctalError || HexdecimalError
-        printf("%s: Conversion from %s to %s is needed ", s_bin, from_type, to_type);
-
-        // Filling for 1 ERROR MESSAGE
-        for (cur = 0; cur < max_bin; cur++, ++copy_bin) {
-          if (cur == (max_bin - 1)) {
-            printf("%s.\n", copy_bin->key);
-          } else {
-            printf("%s, ", copy_bin->key);
+        char keys[max_bin];
+        for (cur = 0; copy_bin->key != NULL; ++copy_bin, cur++) {
+          if (cur == max_bin) {
+            break;
           }
+          keys[cur] = copy_bin->key[0];
         }
-        exit(d_bin);
+        keys[cur] = '\0';
+        bodh(d_bin, s_bin, from_type, to_type, max_bin, keys);
       } else if (is_error_bdoh == TRUE) {
         maximum_integer_error();
       }

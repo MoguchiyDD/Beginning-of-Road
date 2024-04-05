@@ -14,6 +14,8 @@
 ![十进制输入](https://img.shields.io/badge/十进制输入-0%20…%20+2147483647-009688?style=for-the-badge)
 ![十六进制输入](https://img.shields.io/badge/十六进制输入-0%20…%20+7FFFFFFF-009688?style=for-the-badge)
 
+![](result.gif)
+
 ## 函数
 <table>
   <thead>

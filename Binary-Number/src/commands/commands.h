@@ -7,17 +7,17 @@ Result: STRING COMMANDS to NUMERIC COMMANDS
 
 Past Modification: Adding The «OD», «DO», «HD», «DH», «OH» and «HO» COMMANDS
 Last Modification: Adding The «stdint.h» LIBRARY
-Modification Date: 2024.04.03, 08:40 PM
+Modification Date: 2024.04.05, 10:10 PM
 
 Create Date: 2024.03.28, 09:50 PM
 */
 
 
+#include <stdint.h>
+
 #ifndef MAIN_COMMANDS_H
   #define MAIN_COMMANDS_H
   #define COMMANDS 12
-
-  #include <stdint.h>
 
   enum cmd_args{
     BO, OB,  // BO — 2->8   ; OB — 8->2

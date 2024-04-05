@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write your own BINARY NUMBER for The Program
 Result: Complete your own BINARY NUMBER for The Program
 
-Past Modification: Adding The «2->8», «2->10» and «2->16» BLOCKS
-Last Modification: Adding The «8->10», «10->8», «16->10», «10->16», «8->16» and «16->8» BLOCKS
-Modification Date: 2024.03.31, 11:39 PM
+Past Modification: Adding The «stdint.h» LIBRARY
+Last Modification: Editing The «BINARY, OCTAL, DECIMAL and HEXDECIMAL» ERROR
+Modification Date: 2024.04.05, 10:48 PM
 
 Create Date: 2024.03.24, 01:56 PM
 */
@@ -15,12 +15,12 @@ Create Date: 2024.03.24, 01:56 PM
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+#include <stdint.h>
 #include <string.h>
 #include <math.h>
 #include "binary.h"
 #include "../commands/commands.h"
-#include "../errors.h"
+#include "../errors/errors.h"
 
 #ifndef BINARY_FILE_C
   #define BINARY_FILE_C
@@ -34,16 +34,13 @@ Create Date: 2024.03.24, 01:56 PM
   #define MAX_HEXDECIMAL 16
   #define MAX_CHARS_FT_TYPE 11
 
-  union check_max_int {
-    unsigned int value;
-  };
   typedef struct from_and_to_type {
     char from[MAX_CHARS_FT_TYPE];
     char to[MAX_CHARS_FT_TYPE];
   } ft_type;
   typedef struct for_doh {
     const char key[2];
-    const int value;
+    const uint_least8_t value;
   } doh;
   typedef struct oh_template {
     const char key[2];
@@ -79,17 +76,7 @@ Create Date: 2024.03.24, 01:56 PM
 #endif
 
 
-// ----------------- MEMORY FULL -----------------
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError
- * @brief Error Message about MEMORY FULL
- */
-static void memory_full_error() {
-  printf("%s: While calculating a binary number, a memory overflow occurred. No further action is possible.\n", S_MEMORY_FULL);
-  exit(D_MEMORY_FULL);
-}
+// -------------- MEMORY EXPANSION ---------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -98,7 +85,7 @@ static void memory_full_error() {
  * @param *memory Reference to Memory
  * @param size Memory SIZE
  */
-static int memory_realloc(char *memory, int size) {
+static size_t memory_realloc(char *memory, size_t size) {
   size += sizeof(int) + 1;
 
   char *new_memory = realloc(memory, size);
@@ -125,8 +112,9 @@ static int memory_realloc(char *memory, int size) {
  * @param string[] String for New Numbers
  * @param size Memory SIZE
  */
-static void itoa(int index, int number, char string[], int size) {
-  int size_minus_1 = size - 1;
+static void itoa(uint_least8_t index, int_least32_t number, char string[], size_t size) {
+  size_t size_minus_1 = size - 1;
+
   do {
     if (index == size_minus_1) {  // Memory Expansion
       size = memory_realloc(string, size);
@@ -134,6 +122,7 @@ static void itoa(int index, int number, char string[], int size) {
     }
     string[index++] = (number % 10) + '0';
   } while((number /= 10) > 0);
+
   string[index++] = '\0';
 }
 
@@ -143,8 +132,9 @@ static void itoa(int index, int number, char string[], int size) {
  * @param string[] String (Line, Word)
  */
 static void reverse_string(char string[]) {
-  int left = 0, right = strlen(string) - 1;
-  char mid;
+  char mid;  // Middle Side (SAVES THE LEFT SIDE)
+  uint_least8_t left = 0,  // Left Side
+                right = strlen(string) - 1;  // Right Size
 
   for (left, right; left < right; left++, right--) {
     mid = string[left];
@@ -160,24 +150,17 @@ static void reverse_string(char string[]) {
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception BinarySearchError
- * @brief Error Message about BINARY SEARCH
- */
-static void binary_search_error() {
-  printf("%s: Returns -1 from a Hard-Coded Pattern when Searching for 1 Number\n", S_BINARY_SEARCH);
-  exit(D_BINARY_SEARCH);
-}
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
  * @brief Binary Search for CHARACTERS
  * @param target Number to Find (KEY)
  * @param *temp Template with CHARACTERS
  * @param max_temp Length «*temp»
  * @returns Number (Found) || -1 (Not Found)
  */
-static int binary_search_key(char target, template *temp, int max_temp) {
-  int left = 0, right = max_temp - 1, mid;
+static int_least8_t binary_search_key(char target, template *temp, uint_least8_t max_temp) {
+  uint_least8_t left = 0,  // Left Side
+                right = max_temp - 1,  // Right Size
+                mid = 0;  // Middle Side (REQUIRED)
+
   while (left <= right) {
     mid = (left + right) / 2;
 
@@ -201,8 +184,11 @@ static int binary_search_key(char target, template *temp, int max_temp) {
  * @param max_temp Length «*temp»
  * @returns Number (Found) || -1 (Not Found)
  */
-static int binary_search_value(char target[5], template *temp, int max_temp) {
-  int left = 0, right = max_temp - 1, mid;
+static int_least8_t binary_search_value(char target[5], template *temp, uint_least8_t max_temp) {
+  uint_least8_t left = 0,  // Left Side
+                right = max_temp - 1,  // Right Size
+                mid = 0;  // Middle Side (REQUIRED)
+
   while (left <= right) {
     mid = (left + right) / 2;
 
@@ -226,21 +212,13 @@ static int binary_search_value(char target[5], template *temp, int max_temp) {
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
  * @exception MaxIntError
- * @brief Error Message about MAXIMUM INTEGER
- */
-static void maximum_integer_error() {
-  printf("%s: I don't Work After The %dth\n", S_MAXIMUM_INTEGER, INT_MAX);
-  exit(D_MAXIMUM_INTEGER);
-}
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MaxIntError
  * @brief Checks 1 NUMBER for Validity
  * @param *number String Binary Number
  */
-static int b_check_number(char *number) {
-  if (strlen(number) > 31) { maximum_integer_error(); }
+static void b_check_number(char *number) {
+  if (strlen(number) > 31) {
+    maximum_integer_error();
+  }
 }
 
 /**
@@ -250,14 +228,17 @@ static int b_check_number(char *number) {
  * @param *number String Decimal Number
  * @returns Integer Decimal Number
  */
-static int d_check_and_convert_integer_number(char *number) {
-  int int_number = 0,  // Original Integer Number
-      copy_int_number = 0;  // Copy «int_number»
+static int_least32_t d_check_and_convert_integer_number(char *number) {
+  uint_least8_t index_number = 0;  // Index «number»
+  int_least32_t int_number = 0,  // Original Integer Number
+                copy_int_number = 0;  // Copy «int_number»
 
-  for (int index_number = 0; number[index_number] != '\0'; index_number++) {
+  for (index_number; number[index_number] != '\0'; index_number++) {
     copy_int_number = int_number;
     int_number = int_number * 10 + (number[index_number] - 48);
-    if (!(copy_int_number == (int_number / 10)) || (copy_int_number > INT_MAX)) { maximum_integer_error(); }
+    if (!(copy_int_number == (int_number / 10)) || (copy_int_number > INT_LEAST32_MAX)) {
+      maximum_integer_error();
+    }
   }
 
   return int_number;
@@ -272,11 +253,11 @@ static int d_check_and_convert_integer_number(char *number) {
  * @param *memory Reference to Memory
  * @param size Memory SIZE
  */
-static void d_to_boh(char type, int decimal, int division, char *memory, int size) {
-  int size_minus_1 = size - 1,  // for MEMORY EXPANSION
-      div = 1,  // Division without Remainder
-      mod = -1,  // Remainder of Division
-      n = 0;  // for LOOP
+static void d_to_boh(char type, int_least32_t decimal, uint_least8_t division, char *memory, size_t size) {
+  size_t size_minus_1 = size - 1;  // for MEMORY EXPANSION
+  uint_least8_t n = 0;  // for LOOP
+  int_least32_t div = 1,  // Division without Remainder
+                mod = -1;  // Remainder of Division
 
   for (n; div >= 1; ++n) {
     if (n == size_minus_1) {  // Memory Expansion
@@ -303,20 +284,19 @@ static void d_to_boh(char type, int decimal, int division, char *memory, int siz
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
- * @brief Decimal to Binary, Octal || Hexdecimal
+ * @brief Binary to Decimal, Octal || Hexdecimal
  * @param type Mode «b», «o» or «h»
  * @param decimal Integer Decimal Number
  * @param division 2 : Binary, 8 : Octal, 16 : Hexdecimal
  * @param *memory Reference to Memory
  * @param size Memory SIZE
  */
-static void boh_to_d(char type, char *boh, int division, char *memory, int size) {
-  int sum = 0,  // Total for Number
-      len_number = strlen(boh),  // Length «number»
-      index_memory = 0,  // Index «memory»
-      np = 0,  // for LOOP (SUMMA)
-      nm = len_number - 1,  // for LOOP (SUMMA)
-      cur = 0;  // for LOOP (HEXDECIMAL)
+static void boh_to_d(char type, char *boh, uint_least8_t division, char *memory, size_t size) {
+  int_least32_t sum = 0;  // Total for Number
+  uint_least8_t len_number = strlen(boh),  // Length «number»
+                index_memory = 0,  // Index «memory»
+                np = 0,  // for LOOP (SUMMA)
+                nm = len_number - 1;  // for LOOP (SUMMA)
 
   doh *hd = dict_hexdecimal;
   doh *copy_hd = hd;
@@ -354,12 +334,12 @@ static void boh_to_d(char type, char *boh, int division, char *memory, int size)
  * @param s_bin For ERROR MESSAGE «S_BINARY», «S_OCTAL», «S_DECIMAL» or «S_HEXDECIMAL» (#define from «errors.h»)
  * @param is_error_bdoh 0 (ERRORS: BinaryError, DecimalError, OctalError || HexdecimalError) || 1 (ERROR: MaxIntError)
  */
-static void inside_func_checking_number(char *from_type, char *to_type, char *number, doh *bin, int max_bin, int d_bin, char *s_bin, int is_error_bdoh) {
-  int len_number = strlen(number),  // Length «number»
-      size = sizeof(int),  // Memory SIZE
-      is_error = 0,  // Does The INPUT CHARACTER Exist in The STRUCT (0 | No Errors, 1 | Have Errors)
-      n = 0,  // for LOOP #1 (Number)
-      cur = 0;  // for LOOP #2 (Binary, Decimal, Octal || Hexdecimal) and LOOP #3 (for PRINT ERROR)
+static void inside_func_checking_number(char *from_type, char *to_type, char *number, doh *bin, uint_least8_t max_bin, uint_least8_t d_bin, char *s_bin, uint_least8_t is_error_bdoh) {
+  size_t size = sizeof(int);  // Memory SIZE
+  uint_least8_t len_number = strlen(number),  // Length «number»
+                is_error = 0,  // Does The INPUT CHARACTER Exist in The STRUCT (0 | No Errors, 1 | Have Errors)
+                n = 0,  // for LOOP #1 (Number)
+                cur = 0;  // for LOOP #2 (Binary, Decimal, Octal || Hexdecimal) and LOOP #3 (for PRINT ERROR)
 
   doh *copy_bin = bin;
   for (n; n < len_number; n++) {
@@ -375,18 +355,18 @@ static void inside_func_checking_number(char *from_type, char *to_type, char *nu
 
     if (is_error >= 1) {  // Have Errors
       if (is_error_bdoh == FALSE) {  // BinaryError, DecimalError, OctalError || HexdecimalError
-        printf("%s: Conversion from %s to %s is needed ", s_bin, from_type, to_type);
-
-        // Filling for 1 ERROR MESSAGE
-        for (cur = 0; cur < max_bin; cur++, ++copy_bin) {
-          if (cur == (max_bin - 1)) {
-            printf("%s.\n", copy_bin->key);
-          } else {
-            printf("%s, ", copy_bin->key);
+        char keys[max_bin];
+        for (cur = 0; copy_bin->key != NULL; ++copy_bin, cur++) {
+          if (cur == max_bin) {
+            break;
           }
+          keys[cur] = copy_bin->key[0];
         }
-        exit(d_bin);
-      } else if (is_error_bdoh == TRUE) { maximum_integer_error(); }
+        keys[cur] = '\0';
+        bodh(d_bin, s_bin, from_type, to_type, max_bin, keys);
+      } else if (is_error_bdoh == TRUE) {
+        maximum_integer_error();
+      }
     }
   }
 }
@@ -401,8 +381,8 @@ static void inside_func_checking_number(char *from_type, char *to_type, char *nu
  * @param *bdoh STRUCTURE with Pre-Recorded DATA about «binary», «octal», «decimal» or «hexdecimal»
  * @param is_error_bdoh 0 (ERRORS: BinaryError, DecimalError, OctalError || HexdecimalError) || 1 (ERROR: MaxIntError)
  */
-static void checking_number(char *cmd, char *number, ft_type *type, doh *bdoh, int is_error_bdoh) {
-  int int_cmd = int_cmd_args(cmd);
+static void checking_number(char *cmd, char *number, ft_type *type, doh *bdoh, uint_least8_t is_error_bdoh) {
+  int_least8_t int_cmd = int_cmd_args(cmd);
   if ((int_cmd == BO) || (int_cmd == BD) || (int_cmd == BH)) {  // 2->8, 2->10 || 2->16
     inside_func_checking_number(
       type->from, type->to, number, bdoh,
@@ -436,14 +416,14 @@ static void checking_number(char *cmd, char *number, ft_type *type, doh *bdoh, i
  * @param *new_number MEMORY where The Converted Number is Written After VERIFICATION
  * @param size Amount of Memory
  */
-static void template_to_binary(template *temp, int max_temp, char *number, char *new_number, int size) {
-  int len_number = strlen(number),  // Length «number»
-      index_new_number = 0,  // Index for New Number
-      size_minus_1 = size - 1,  // for MEMORY EXPANSION
-      find = -1,  // Found Number
-      n_not_1 = 0,  // 
-      n = 0,  // for LOOP #1 (for Number)
-      t = 0;  // for LOOP #2 (for Template)
+static void template_to_binary(template *temp, uint_least8_t max_temp, char *number, char *new_number, size_t size) {
+  size_t size_minus_1 = size - 1;  // for MEMORY EXPANSION
+  int_least8_t find = -1;  // Found Number
+  uint_least8_t len_number = strlen(number),  // Length «number»
+                index_new_number = 0,  // Index for New Number
+                n_not_1 = 0,  // Looks for The 1st Unit in The PATTERN
+                n = 0,  // for LOOP #1 (for Number)
+                t = 0;  // for LOOP #2 (for Template)
 
   template *copy_temp = temp;
   for (n; n < len_number; n++) {
@@ -454,11 +434,19 @@ static void template_to_binary(template *temp, int max_temp, char *number, char 
 
     // Find 1 Number
     find = binary_search_key(number[n], temp, max_temp);
-    if (find == -1) { binary_search_error(); }
+    if (find == -1) {
+      binary_search_error();
+    }
     temp = copy_temp;
 
     for (t = 0; t < strlen(temp[find].value); t++) {
-      if ((n == 0) && (temp[find].value[t] == '1')) { ++n_not_1; }
+      if ((n == 0) && (temp[find].value[t] == '1')) {  // Looks for The 1st Unit in The PATTERN
+        ++n_not_1;
+      } else if ((n == 0) && (find == 0)) {  // NUMBER == 0
+        new_number[index_new_number++] = '0';
+        break;
+      }
+
       if ((n_not_1 >= 1) && temp[find].value[t] != '\0') {
         if (strlen(new_number) == size_minus_1) {  // Memory Expansion
           size = memory_realloc(new_number, size);
@@ -480,18 +468,20 @@ static void template_to_binary(template *temp, int max_temp, char *number, char 
  * @param *new_number MEMORY where The Converted Number is Written After VERIFICATION
  * @param size Amount of Memory
  */
-static void template_from_binary(template *temp, int max_temp, char *number, char *new_number, int size) {
-  int len_number = strlen(number),  // Length «number»
-      index_new_number = 0,  // Index for New Number
-      size_minus_1 = size - 1,  // for MEMORY EXPANSION
-      find = -1,  // Found Number
-      n = len_number - 1,  // for LOOP #1 (for Number)
-      t = 0;  // for LOOP #2 (for Template)
+static void template_from_binary(template *temp, uint_least8_t max_temp, char *number, char *new_number, size_t size) {
+  size_t size_minus_1 = size - 1;  // for MEMORY EXPANSION
+  uint_least8_t len_number = strlen(number),  // Length «number»
+                index_new_number = 0,  // Index for New Number
+                t = 0;  // for LOOP #2 (for Template)
+  int_least8_t find = -1,  // Found Number
+               n = len_number - 1;  // for LOOP #1 (for Number)
 
   template *copy_temp = temp;
-  int len_temp_value = strlen(temp->value);
+  uint_least8_t len_temp_value = strlen(temp->value);
   char *temp_value = calloc(size, sizeof(char));
-  if (temp_value == NULL) { memory_full_error(); }
+  if (temp_value == NULL) {
+    memory_full_error();
+  }
 
   for (n; n >= 0; index_new_number++) {
     if (index_new_number == size_minus_1) {  // Memory Expansion
@@ -512,7 +502,9 @@ static void template_from_binary(template *temp, int max_temp, char *number, cha
 
     // Find 1 Number
     find = binary_search_value(temp_value, temp, max_temp);
-    if (find == -1) { binary_search_error(); }
+    if (find == -1) {
+      binary_search_error();
+    }
     temp = copy_temp;
 
     new_number[index_new_number] = temp[find].key[0];
@@ -522,7 +514,7 @@ static void template_from_binary(template *temp, int max_temp, char *number, cha
 // -----------------------------------------------
 
 
-// -------------------- OCTAL --------------------
+// ------------------- BINARY --------------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -534,20 +526,77 @@ static void template_from_binary(template *temp, int max_temp, char *number, cha
  */
 char* _bo(char *cmd, char *number) {
   ft_type type[2] = {"binary\0", "octal\0"};
-  checking_number(cmd, number, type, dict_binary, FALSE);
-  b_check_number(number);
+  checking_number(cmd, number, type, dict_binary, FALSE);  // Valid Number
+  b_check_number(number);  // Maximum Integer
 
-  int size = 4;  // 1 byte (000 - 111) + '\0'
-  char *o = calloc(size, sizeof(char));
-  if (o == NULL) { memory_full_error(); }
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
+  char *b = calloc(size, sizeof(char));
+  if (b == NULL) {
+    memory_full_error();
+  }
 
   // Filling Out a DATA
-  template_from_binary(o_temp, MAX_OCTAL, number, o, size);
-  o[strlen(o)] = '\0';
-  reverse_string(o);
+  template_from_binary(o_temp, MAX_OCTAL, number, b, size);
+  b[strlen(b)] = '\0';
+  reverse_string(b);
 
-  return o;
+  return b;
 }
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError, BinaryError || MaxIntError
+ * @brief Binary to Decimal | (Example, INPUT: "1010"; OUTPUT: "10")
+ * @param *cmd Command is «-bd»
+ * @param *number Binary Number
+ * @returns Decimal Number
+ */
+char* _bd(char *cmd, char *number) {
+  ft_type type[2] = {"binary\0", "decimal\0"};
+  checking_number(cmd, number, type, dict_binary, FALSE);  // Valid Number
+  b_check_number(number);  // Maximum Integer
+
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
+  char *b = calloc(size, sizeof(char));
+  if (b == NULL) {
+    memory_full_error();
+  }
+
+  boh_to_d('b', number, 2, b, size);  // Filling Out a DATA
+  return b;
+}
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError, BinarySearchError, BinaryError || MaxIntError
+ * @brief Binary to Hexdecimal | (Example, INPUT: "1010"; OUTPUT: "A")
+ * @param *cmd Command is «-bh»
+ * @param *number Binary Number
+ * @returns Hexdecimal Number
+ */
+char* _bh(char *cmd, char *number) {
+  ft_type type[2] = {"binary\0", "hexdecimal\0"};
+  checking_number(cmd, number, type, dict_binary, FALSE);  // Valid Number
+  b_check_number(number);  // Maximum Integer
+
+  size_t size = 5;  // 1 byte (0000 - 1111) + '\0'
+  char *b = calloc(size, sizeof(char));
+  if (b == NULL) {
+    memory_full_error();
+  }
+
+  // Filling Out a DATA
+  template_from_binary(h_temp, MAX_HEXDECIMAL, number, b, size);
+  b[strlen(b)] = '\0';
+  reverse_string(b);
+
+  return b;
+}
+
+// -----------------------------------------------
+
+
+// -------------------- OCTAL --------------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -559,25 +608,23 @@ char* _bo(char *cmd, char *number) {
  */
 char* _ob(char *cmd, char *number) {
   ft_type type[2] = {"octal\0", "binary\0"};
-  checking_number(cmd, number, type, dict_octal, FALSE);
+  checking_number(cmd, number, type, dict_octal, FALSE);  // Valid Number
 
-  int size = 4;  // 1 byte (000 - 111) + '\0'
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
   char *o = calloc(size, sizeof(char));
-  if (o == NULL) { memory_full_error(); }
+  if (o == NULL) {
+    memory_full_error();
+  }
 
   // Filling Out a DATA
   template_to_binary(o_temp, MAX_OCTAL, number, o, size);
   o[strlen(o)] = '\0';
 
-  checking_number("-bo", o, type, dict_binary, TRUE);
-  b_check_number(o);
+  checking_number("-bo", o, type, dict_binary, TRUE);  // Valid Number
+  b_check_number(o);  // Maximum Integer
+
   return o;
 }
-
-// -----------------------------------------------
-
-
-// -------------- OCTAL && DECIMAL ---------------
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
@@ -589,14 +636,73 @@ char* _ob(char *cmd, char *number) {
  */
 char* _od(char *cmd, char *number) {
   ft_type type[2] = {"octal\0", "decimal\0"};
-  checking_number(cmd, number, type, dict_octal, FALSE);
+  checking_number(cmd, number, type, dict_octal, FALSE);  // Valid Number
 
-  int size = 4;  // 1 byte (000 - 111) + '\0'
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
+  char *o = calloc(size, sizeof(char));
+  if (o == NULL) {
+    memory_full_error();
+  }
+
+  boh_to_d('o', number, 8, o, size);  // Filling Out a DATA
+  checking_number("-do", o, type, dict_decimal, TRUE);  // Valid Number
+
+  return o;
+}
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError, OctalError || MaxIntError
+ * @brief Octal to Hexdecimal | (Example, INPUT: "12"; OUTPUT: "A")
+ * @param *cmd Command is «-oh»
+ * @param *number Octal Number
+ * @returns Hexdecimal Number
+ */
+char* _oh(char *cmd, char *number) {
+  ft_type type[2] = {"octal\0", "hexdecimal\0"};
+  checking_number(cmd, number, type, dict_octal, FALSE);  // Valid Number
+
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
+  char *o = calloc(size, sizeof(char));
+  if (o == NULL) {
+    memory_full_error();
+  }
+
+  boh_to_d('o', number, 8, o, size);  // 8->10
+  checking_number("-do", o, type, dict_decimal, TRUE);  // Valid Number
+
+  int_least32_t decimal = d_check_and_convert_integer_number(o);  // Decimal Number
+  d_to_boh('h', decimal, 16, o, size); // 10->16
+
+  return o;
+}
+
+// -----------------------------------------------
+
+
+// ------------------- DECIMAl -------------------
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError, DecimalError || MaxIntError
+ * @brief Decimal to Binary | (Example, INPUT: "10"; OUTPUT: "1010")
+ * @param *cmd Command is «-db»
+ * @param *number Decimal Number
+ * @returns Binary Number
+ */
+char* _db(char *cmd, char *number) {
+  ft_type type[2] = {"decimal\0", "binary\0"};
+  checking_number(cmd, number, type, dict_decimal, FALSE);  // Valid Number
+
+  int_least32_t decimal = d_check_and_convert_integer_number(number);  // Decimal Number
+
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
   char *d = calloc(size, sizeof(char));
-  if (d == NULL) { memory_full_error(); }
+  if (d == NULL) {
+    memory_full_error();
+  }
 
-  boh_to_d('o', number, 8, d, size);  // Filling Out a DATA
-  checking_number("-do", d, type, dict_decimal, TRUE);
+  d_to_boh('b', decimal, 2, d, size);  // Filling Out a DATA
   return d;
 }
 
@@ -610,89 +716,17 @@ char* _od(char *cmd, char *number) {
  */
 char* _do(char *cmd, char *number) {
   ft_type type[2] = {"decimal\0", "octal\0"};
-  checking_number(cmd, number, type, dict_decimal, FALSE);
+  checking_number(cmd, number, type, dict_decimal, FALSE);  // Valid Number
 
-  int decimal = d_check_and_convert_integer_number(number),  // Number
-      size = 4;  // 1 byte (000 - 111) + '\0'
+  int_least32_t decimal = d_check_and_convert_integer_number(number);  // Decimal Number
 
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
   char *d = calloc(size, sizeof(char));
-  if (d == NULL) { memory_full_error(); }
+  if (d == NULL) {
+    memory_full_error();
+  }
 
   d_to_boh('o', decimal, 8, d, size);  // Filling Out a DATA
-  return d;
-}
-
-// -----------------------------------------------
-
-
-// ------------------- DECIMAL -------------------
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError, BinaryError || MaxIntError
- * @brief Binary to Decimal | (Example, INPUT: "1010"; OUTPUT: "10")
- * @param *cmd Command is «-bd»
- * @param *number Binary Number
- * @returns Decimal Number
- */
-char* _bd(char *cmd, char *number) {
-  ft_type type[2] = {"binary\0", "decimal\0"};
-  checking_number(cmd, number, type, dict_binary, FALSE);
-  b_check_number(number);
-
-  int size = 4;  // 1 byte (000 - 111) + '\0'
-  char *d = calloc(size, sizeof(char));
-  if (d == NULL) { memory_full_error(); }
-
-  boh_to_d('b', number, 2, d, size);  // Filling Out a DATA
-  return d;
-}
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError, DecimalError || MaxIntError
- * @brief Decimal to Binary | (Example, INPUT: "10"; OUTPUT: "1010")
- * @param *cmd Command is «-db»
- * @param *number Decimal Number
- * @returns Binary Number
- */
-char* _db(char *cmd, char *number) {
-  ft_type type[2] = {"decimal\0", "binary\0"};
-  checking_number(cmd, number, type, dict_decimal, FALSE);
-
-  int decimal = d_check_and_convert_integer_number(number),  // Number
-      size = 4;  // 1 byte (000 - 111) + '\0'
-
-  char *d = calloc(size, sizeof(char));
-  if (d == NULL) { memory_full_error(); }
-
-  d_to_boh('b', decimal, 2, d, size);  // Filling Out a DATA
-  return d;
-}
-
-// -----------------------------------------------
-
-
-// ------------ HEXDECIMAL && DECIMAL ------------
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError, HexdecimalError || MaxIntError
- * @brief Hexdecimal to Decimal | (Example, INPUT: "A"; OUTPUT: "10")
- * @param *cmd Command is «-hd»
- * @param *number Hexdecimal Number
- * @returns Decimal Number
- */
-char* _hd(char *cmd, char *number) {
-  ft_type type[2] = {"hexdecimal\0", "decimal\0"};
-  checking_number(cmd, number, type, dict_hexdecimal, FALSE);
-
-  int size = 4;  // 1 byte (000 - 111) + '\0'
-  char *d = calloc(size, sizeof(char));
-  if (d == NULL) { memory_full_error(); }
-
-  boh_to_d('h', number, 16, d, size);  // Filling Out a DATA
-  checking_number("-dh", d, type, dict_decimal, TRUE);
   return d;
 }
 
@@ -706,13 +740,15 @@ char* _hd(char *cmd, char *number) {
  */
 char* _dh(char *cmd, char *number) {
   ft_type type[2] = {"decimal\0", "hexdecimal\0"};
-  checking_number(cmd, number, type, dict_decimal, FALSE);
+  checking_number(cmd, number, type, dict_decimal, FALSE);  // Valid Number
 
-  int decimal = d_check_and_convert_integer_number(number),  // Number
-      size = 4;  // 1 byte (000 - 111) + '\0'
+  int_least32_t decimal = d_check_and_convert_integer_number(number);  // Decimal Number
 
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
   char *d = calloc(size, sizeof(char));
-  if (d == NULL) { memory_full_error(); }
+  if (d == NULL) {
+    memory_full_error();
+  }
 
   d_to_boh('h', decimal, 16, d, size);  // Filling Out a DATA
   return d;
@@ -725,31 +761,6 @@ char* _dh(char *cmd, char *number) {
 
 /**
  * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError, BinarySearchError, BinaryError || MaxIntError
- * @brief Binary to Hexdecimal | (Example, INPUT: "1010"; OUTPUT: "A")
- * @param *cmd Command is «-bh»
- * @param *number Binary Number
- * @returns Hexdecimal Number
- */
-char* _bh(char *cmd, char *number) {
-  ft_type type[2] = {"binary\0", "hexdecimal\0"};
-  checking_number(cmd, number, type, dict_binary, FALSE);
-  b_check_number(number);
-
-  int size = 5;  // 1 byte (0000 - 1111) + '\0'
-  char *h = calloc(size, sizeof(char));
-  if (h == NULL) { memory_full_error(); }
-
-  // Filling Out a DATA
-  template_from_binary(h_temp, MAX_HEXDECIMAL, number, h, size);
-  h[strlen(h)] = '\0';
-  reverse_string(h);
-
-  return h;
-}
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
  * @exception MemoryFullError, BinarySearchError, HexdecimalError || MaxIntError
  * @brief Hexdecimal to Binary | (Example, INPUT: "A"; OUTPUT: "1010")
  * @param *cmd Command is «-hb»
@@ -758,49 +769,22 @@ char* _bh(char *cmd, char *number) {
  */
 char* _hb(char *cmd, char *number) {
   ft_type type[2] = {"hexdecimal\0", "binary\0"};
-  checking_number(cmd, number, type, dict_hexdecimal, FALSE);
+  checking_number(cmd, number, type, dict_hexdecimal, FALSE);  // Valid Number
 
-  int size = 5;  // 1 byte (0000 - 1111) + '\0'
+  size_t size = 5;  // 1 byte (0000 - 1111) + '\0'
   char *h = calloc(size, sizeof(char));
-  if (h == NULL) { memory_full_error(); }
+  if (h == NULL) {
+    memory_full_error();
+  }
 
   // Filling Out a DATA
   template_to_binary(h_temp, MAX_HEXDECIMAL, number, h, size);
   h[strlen(h)] = '\0';
 
-  checking_number("-bh", h, type, dict_binary, TRUE);
-  b_check_number(h);
+  checking_number("-bh", h, type, dict_binary, TRUE);  // Valid Number
+  b_check_number(h);  // Maximum Integer
+
   return h;
-}
-
-// -----------------------------------------------
-
-
-// ------------- OCTAL && HEXDECIMAL -------------
-
-/**
- * @copyright Copyright (c) 2024 MoguchiyDD
- * @exception MemoryFullError, OctalError || MaxIntError
- * @brief Octal to Hexdecimal | (Example, INPUT: "12"; OUTPUT: "A")
- * @param *cmd Command is «-oh»
- * @param *number Octal Number
- * @returns Hexdecimal Number
- */
-char* _oh(char *cmd, char *number) {
-  ft_type type[2] = {"octal\0", "hexdecimal\0"};
-  checking_number(cmd, number, type, dict_octal, FALSE);
-
-  int size = 4;  // 1 byte (000 - 111) + '\0'
-  char *o = calloc(size, sizeof(char));
-  if (o == NULL) { memory_full_error(); }
-
-  boh_to_d('o', number, 8, o, size);  // 8->10
-  checking_number("-do", o, type, dict_decimal, TRUE);
-
-  int decimal = d_check_and_convert_integer_number(o);  // Number
-  d_to_boh('h', decimal, 16, o, size); // 10->16
-
-  return o;
 }
 
 /**
@@ -812,18 +796,44 @@ char* _oh(char *cmd, char *number) {
  * @returns Octal Number
  */
 char* _ho(char *cmd, char *number) {
-  ft_type type[2] = {"hexdecimal\0", "decimal\0"};
-  checking_number(cmd, number, type, dict_hexdecimal, FALSE);
+  ft_type type[2] = {"hexdecimal\0", "octal\0"};
+  checking_number(cmd, number, type, dict_hexdecimal, FALSE);  // Valid Number
 
-  int size = 4;  // 1 byte (000 - 111) + '\0'
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
   char *h = calloc(size, sizeof(char));
-  if (h == NULL) { memory_full_error(); }
+  if (h == NULL) {
+    memory_full_error();
+  }
 
   boh_to_d('h', number, 16, h, size);  // 16->10
-  checking_number("-dh", h, type, dict_decimal, TRUE);
+  checking_number("-dh", h, type, dict_decimal, TRUE);  // Valid Number
 
-  int decimal = d_check_and_convert_integer_number(h);  // Number
+  int_least32_t decimal = d_check_and_convert_integer_number(h);  // Decimal Number
   d_to_boh('o', decimal, 8, h, size); // 16->8
+
+  return h;
+}
+
+/**
+ * @copyright Copyright (c) 2024 MoguchiyDD
+ * @exception MemoryFullError, HexdecimalError || MaxIntError
+ * @brief Hexdecimal to Decimal | (Example, INPUT: "A"; OUTPUT: "10")
+ * @param *cmd Command is «-hd»
+ * @param *number Hexdecimal Number
+ * @returns Decimal Number
+ */
+char* _hd(char *cmd, char *number) {
+  ft_type type[2] = {"hexdecimal\0", "decimal\0"};
+  checking_number(cmd, number, type, dict_hexdecimal, FALSE);  // Valid Number
+
+  size_t size = 4;  // 1 byte (000 - 111) + '\0'
+  char *h = calloc(size, sizeof(char));
+  if (h == NULL) {
+    memory_full_error();
+  }
+
+  boh_to_d('h', number, 16, h, size);  // Filling Out a DATA
+  checking_number("-dh", h, type, dict_decimal, TRUE);  // Valid Number
 
   return h;
 }

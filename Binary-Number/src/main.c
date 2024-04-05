@@ -5,9 +5,9 @@ LICENSE: MIT License which is located in the text file LICENSE
 Goal: Write The BINARY NUMBER from 0
 Result: Complete The BINARY NUMBER from 0
 
-Past Modification: Adding The «8->10», «10->8», «16->10», «10->16», «8->16» and «16->8» BLOCKS
-Last Modification: Adding The «stdint.h» LIBRARY
-Modification Date: 2024.04.03, 08:40 PM
+Past Modification: Adding The «stdint.h» LIBRARY
+Last Modification: Editing The ARGUMENTS and ERRORS
+Modification Date: 2024.04.05, 10:43 PM
 
 Create Date: 2024.03.23, 09:26 PM
 */
@@ -15,28 +15,14 @@ Create Date: 2024.03.23, 09:26 PM
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include <string.h>
-#include <ctype.h>
+#include "errors/errors.h"
 #include "commands/commands.h"
+#include "arguments/arguments.h"
 #include "binary/binary.h"
-#include "errors.h"
-
-#ifndef MAIN
-  #define MAIN
-  #define ARGUMENTS 3
-#endif
 
 uint_least8_t main(int argc, char *argv[]) {
-  if ((argc < ARGUMENTS) || (argc > ARGUMENTS)) {  // CHECK: Number of Arguments
-    if (argc == 1) {
-      printf("%s: found %d argument, but needed %d arguments.\n", S_COUNT_ARGUMENTS, argc, ARGUMENTS);
-    } else {
-      printf("%s: found %d arguments, but needed %d arguments.\n", S_COUNT_ARGUMENTS, argc, ARGUMENTS);
-    }
-    exit(D_COUNT_ARGUMENTS);
-  }
-
+  num_args_error(argc);  // CHECK: Number of Arguments
   printf("Binary Number\n—————————————\n");  // Greetings
 
   // COMMANDS
@@ -44,18 +30,12 @@ uint_least8_t main(int argc, char *argv[]) {
   strcpy(cmd, argv[1]);
 
   // NUMBER
-  uint_least8_t a2 = 0,  // for «argv[2]»
-               n = 0;  // for «number»
-  char number[strlen(argv[2])];
-  while (argv[2][a2]) {
-    if (isalpha(argv[2][a2]) != 0) {
-      number[n++] = toupper(argv[2][a2]);
-    } else {
-      number[n++] = argv[2][a2];
-    }
-    a2++;
+  char *number = calloc(strlen(argv[2]), sizeof(char));
+  if (number == NULL) {
+    printf("%s: While calculating a binary number, a memory overflow occurred. No further action is possible.\n", S_MEMORY_FULL);
+    exit(D_MEMORY_FULL);
   }
-  number[strlen(argv[2])] = '\0';
+  primary_validity_arg(argv[2], number);
 
   switch(int_cmd_args(cmd)) {
     case BO:  // 2->8
@@ -119,10 +99,11 @@ uint_least8_t main(int argc, char *argv[]) {
       free(hexdecimal_octal);
       break;
     default:
-      printf("%s: command is missing.\n", S_COMMAND_IS_MISSING);
-      exit(D_COMMAND_IS_MISSING);
+      command_is_missing();
   }
 
   free(cmd);
+  free(number);
+
   return 0;
 }

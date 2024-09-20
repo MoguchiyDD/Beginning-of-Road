@@ -9,19 +9,6 @@
 </div>
 
 ## 项目
-<table>
-  <thead>
-    <tr>
-      <th>分支</th>
-      <th>描述</th>
-      <th>编程语言</th>
-    </tr>
-    </thead>
-  <tbody>
-    <tr>
-      <td><a href="https://github.com/MoguchiyDD/Beginning-of-Road/tree/binary-number">binary-number</a></td>
-      <td>二进制</td>
-      <td>C</td>
-    </tr>
-  </tbody>
-</table>
+|                                         分支                                         | 描述  | 编程语言 |           YouTube            |
+| ----------------------------------------------------------------------------------- | ----- | ------ | ---------------------------- |
+| [binary-number](https://github.com/MoguchiyDD/Beginning-of-Road/tree/binary-number) | 二进制 | C      | https://youtu.be/mRvEi7idza8 |

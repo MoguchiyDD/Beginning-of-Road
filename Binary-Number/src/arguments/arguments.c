@@ -31,7 +31,7 @@ void primary_validity_arg(char *argv, char *number) {
                 fixed = 0;  // NUMBER SYMBOL Encountered NON-ZERO
 
   do {
-    if ((argv[a] != '0') && (strlen(argv) >= 2) && (fixed == 0)) {  // for 0
+    if ((argv[a] != '0') && (strlen(argv) >= 1) && (fixed == 0)) {  // for 0
       ++fixed;
     }
 
